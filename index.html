@@ -1,7 +1,59 @@
-RainCocoon body{margin:0;font-family:Arial;background:#0b132b;color:#fff;display:flex;align-items:center;justify-content:center;height:100vh} .card{background:#1c2541;padding:20px;border-radius:16px;box-shadow:0 0 20px rgba(0,0,0,.5);width:90%;max-width:420px;text-align:center} button{width:100%;padding:12px;margin:6px 0;border:none;border-radius:10px;font-size:15px;background:#5bc0be;color:#000} select,input[type=range]{width:100%;padding:8px;border-radius:10px;margin-top:8px} 
-🌧️ RainCocoon
-Ambiances cocoon pour dormir
-Pluie sur le toit Pluie forêt Orage lointain Pluie sur fenêtre Pluie + Feu Feu de cheminée Douche chaude Stop
-Sans minuterie30 minutes1 heure2 heures5 heures Pas de réveilSieste 20 minOiseaux 5 minOiseaux 10 minOiseaux 15 minPiano 5 minPiano 10 minPiano 15 minVagues 5 minVagues 10 minVagues 15 minCarillon zen 5 minCarillon zen 10 minCarillon zen 15 min 
-🖤 Écran noir total
-let t, alarmT; function fadeIn(a){a.volume=0;a.play();let v=0;let f=setInterval(()=>{v+=0.05;if(v>=1){v=1;clearInterval(f);}a.volume=v;},300);} function play(id){stopAll();fadeIn(document.getElementById(id));} function mix(){stopAll();fadeIn(rain);fadeIn(fire);} function stopAll(){document.querySelectorAll('audio').forEach(a=>{let v=a.volume;let f=setInterval(()=>{v-=0.05;if(v<=0){a.pause();a.currentTime=0;clearInterval(f);}a.volume=Math.max(v,0);},200);});clearTimeout(t);clearTimeout(alarmT);} function setTimer(){const v=timer.value;if(v>0){t=setTimeout(stopAll,v)}} function setAlarm(){const v=alarm.value;if(v>0){const p=v.split('|');alarmT=setTimeout(()=>{fadeIn(document.getElementById(p[1]));},p[0])}} function setVol(){const v=vol.value;document.querySelectorAll('audio').forEach(a=>a.volume=v);} function blackMode(){document.body.style.background='black';document.querySelector('.card').style.display='none';}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RainCocoon</title>
+<style>
+body{margin:0;font-family:Arial;background:#0b132b;color:#fff;display:flex;align-items:center;justify-content:center;height:100vh}
+.card{background:#1c2541;padding:20px;border-radius:16px;box-shadow:0 0 20px rgba(0,0,0,.5);width:90%;max-width:420px;text-align:center}
+button{width:100%;padding:12px;margin:6px 0;border:none;border-radius:10px;font-size:15px;background:#5bc0be;color:#000}
+select,input[type=range]{width:100%;padding:8px;border-radius:10px;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="card">
+<h2>🌧️ RainCocoon</h2>
+<input type="range" id="vol" min="0" max="1" step="0.01" value="1" oninput="setVol()">
+<p>Ambiances cocoon pour dormir</p>
+
+<audio id="rain" loop src="https://cdn.pixabay.com/audio/2022/03/15/audio_9e8b1c9a65.mp3"></audio>
+<audio id="forest" loop src="https://cdn.pixabay.com/audio/2022/02/23/audio_5b4f8c5a1a.mp3"></audio>
+<audio id="storm" loop src="https://cdn.pixabay.com/audio/2022/03/10/audio_8c6a7b8f9d.mp3"></audio>
+<audio id="window" loop src="https://cdn.pixabay.com/audio/2022/01/18/audio_1f3c2d4a5b.mp3"></audio>
+<audio id="shower" loop src="https://cdn.pixabay.com/audio/2021/09/06/audio_7c2a3a7e0c.mp3"></audio>
+<audio id="fire" loop src="https://cdn.pixabay.com/audio/2021/08/04/audio_3c4f5e6a7b.mp3"></audio>
+
+<audio id="birds" loop src="https://cdn.pixabay.com/audio/2022/05/23/audio_6b7c8d9e0f.mp3"></audio>
+<audio id="piano" loop src="https://cdn.pixabay.com/audio/2022/03/24/audio_4f3a2b1c9d.mp3"></audio>
+<audio id="waves" loop src="https://cdn.pixabay.com/audio/2021/08/09/audio_9a8b7c6d5e.mp3"></audio>
+<audio id="chime" loop src="https://cdn.pixabay.com/audio/2022/06/01/audio_1a2b3c4d5e.mp3"></audio>
+
+<button onclick="play('rain')">Pluie sur le toit</button>
+<button onclick="play('forest')">Pluie forêt</button>
+<button onclick="play('storm')">Orage lointain</button>
+<button onclick="play('window')">Pluie sur fenêtre</button>
+<button onclick="mix()">Pluie + Feu</button>
+<button onclick="play('fire')">Feu de cheminée</button>
+<button onclick="play('shower')">Douche chaude</button>
+<button onclick="stopAll()">Stop</button>
+
+<select id="timer" onchange="setTimer()">
+<option value="0">Sans minuterie</option>
+<option value="1800000">30 minutes</option>
+<option value="3600000">1 heure</option>
+<option value="7200000">2 heures</option>
+<option value="18000000">5 heures</option>
+</select>
+
+<select id="alarm" onchange="setAlarm()">
+<option value="0">Pas de réveil</option>
+<option value="1200000|birds">Sieste 20 min</option>
+<option value="300000|birds">Oiseaux 5 min</option>
+<option value="600000|birds">Oiseaux 10 min</option>
+<option value="900000|birds">Oiseaux 15 min</option>
+<option value="300000|piano">Piano 5 min</option>
+<option value="600000|piano">Piano 10 min</option>
+<option value="900000|piano">Piano 15 min</option>
+<option value="300000|waves">Vagues 5 min</option>
+<option value="600000|waves">Vagues
